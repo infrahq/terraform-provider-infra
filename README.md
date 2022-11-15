@@ -1,64 +1,75 @@
-# Terraform Provider Scaffolding (Terraform Plugin SDK)
+# Terraform Provider for Infra
 
-_This template repository is built on the [Terraform Plugin SDK](https://github.com/hashicorp/terraform-plugin-sdk). The template repository built on the [Terraform Plugin Framework](https://github.com/hashicorp/terraform-plugin-framework) can be found at [terraform-provider-scaffolding-framework](https://github.com/hashicorp/terraform-provider-scaffolding-framework). See [Which SDK Should I Use?](https://www.terraform.io/docs/plugin/which-sdk.html) in the Terraform documentation for additional information._
+This repository is a [Terraform](https://www.terraform.io) provider for managing [Infra](https://www.infrahq.com) resources. This provider is maintained by the Infra development team.
 
-This repository is a *template* for a [Terraform](https://www.terraform.io) provider. It is intended as a starting point for creating Terraform providers, containing:
-
- - A resource, and a data source (`internal/provider/`),
- - Examples (`examples/`) and generated documentation (`docs/`),
- - Miscellaneous meta files.
- 
-These files contain boilerplate code that you will need to edit to create your own Terraform provider. Tutorials for creating Terraform providers can be found on the [HashiCorp Learn](https://learn.hashicorp.com/collections/terraform/providers) platform.
-
-Please see the [GitHub template repository documentation](https://help.github.com/en/github/creating-cloning-and-archiving-repositories/creating-a-repository-from-a-template) for how to create a new repository from this template on GitHub.
-
-Once you've written your provider, you'll want to [publish it on the Terraform Registry](https://www.terraform.io/docs/registry/providers/publishing.html) so that others can use it.
-
+_Terraform Infra provider is under active development._
 
 ## Requirements
 
 -	[Terraform](https://www.terraform.io/downloads.html) >= 0.13.x
 -	[Go](https://golang.org/doc/install) >= 1.18
 
-## Building The Provider
+## Building the provider
 
 1. Clone the repository
 1. Enter the repository directory
-1. Build the provider using the Go `install` command: 
-```sh
-$ go install
+1. Build the provider using the Go `install` command. This will put the provider binary in the `$GOPATH/bin` directory.
+
+```shell
+go install
 ```
-
-## Adding Dependencies
-
-This provider uses [Go modules](https://github.com/golang/go/wiki/Modules).
-Please see the Go documentation for the most up to date information about using Go modules.
-
-To add a new dependency `github.com/author/dependency` to your Terraform provider:
-
-```
-go get github.com/author/dependency
-go mod tidy
-```
-
-Then commit the changes to `go.mod` and `go.sum`.
 
 ## Using the provider
 
-Fill this in for each provider
+To use a published version of the provider, run `terraform init` to automatically install the latest provider.
 
-## Developing the Provider
+To use a not-yet-published version of the provider, download the [latest][1] release from GitHub, unpack the file, and add the binary to `~/.terraform.d/plugins/registry.terraform.io/infrahq/infra/${version}/${target}`. Afterwards, run `terraform init` to initialize the provider.
 
-If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (see [Requirements](#requirements) above).
+To use a custom built version of the provider, follow the steps below:
 
-To compile the provider, run `go install`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
+1. Build the provider binary using the steps [above](#building-the-provider).
+1. Create a [`~/.terraformrc`](https://developer.hashicorp.com/terraform/cli/config/config-file) with the following content. Ensure the full path of the directory the binary built in the previous step lives in is passed in to `dev_overrides`.
 
-To generate or update documentation, run `go generate`.
+    ```terraform
+    provider_installation {
 
-In order to run the full suite of Acceptance tests, run `make testacc`.
+      # Use "$GOPATH/bin" as an overridden package
+      # directory for the infrahq/infra provider. This disables the version and
+      # checksum verifications for this provider and forces Terraform to look for
+      # the infra provider plugin in the given directory.
+      dev_overrides {
+        "infrahq/infra" = "<full path to $GOPATH/bin>"
+      }
 
-*Note:* Acceptance tests create real resources, and often cost money to run.
+      # For all other providers, install them directly from their origin provider
+      # registries as normal. If you omit this, Terraform will _only_ use
+      # the dev_overrides block, and so no other providers will be available.
+      direct {}
+    }
+    ```
 
-```sh
-$ make testacc
-```
+1. Configure the provider in Terraform.
+
+    ```terraform
+    terraform {
+      required_providers {
+        infra = {
+          source  = "infrahq/infra"
+        }
+      }
+    }
+
+    provider "infra" {
+      access_key = "xxxxxxxxxx.yyyyyyyyyyyyyyyyyyyyyyyy"
+    }
+    ```
+
+1. Create your first Infra resources! Examples for all resources and data sources are available in `examples/`.
+
+## Developing the provider
+
+To build the provider, follow the steps above.
+
+To update the documentation, run `go generate`.
+
+To run the test suite, run `make testacc`.
