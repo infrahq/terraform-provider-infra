@@ -11,11 +11,11 @@ import (
 	"github.com/infrahq/infra/api"
 )
 
-func dataSourceKubernetesCredential() *schema.Resource {
+func dataSourceCredential() *schema.Resource {
 	return &schema.Resource{
-		Description: "Get an authentication token to communicate with a registered Kubernetes cluster.",
+		Description: "Get an authentication token to communicate with a registered destination.",
 
-		ReadContext: dataSourceKubernetesCredentialRead,
+		ReadContext: dataSourceCredentialRead,
 
 		Schema: map[string]*schema.Schema{
 			"id": &schema.Schema{
@@ -23,7 +23,7 @@ func dataSourceKubernetesCredential() *schema.Resource {
 				Computed: true,
 			},
 			"token": &schema.Schema{
-				Description: "A token that can be used to authenticate with the cluster.",
+				Description: "A token that can be used to authenticate the user.",
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
@@ -31,7 +31,7 @@ func dataSourceKubernetesCredential() *schema.Resource {
 	}
 }
 
-func dataSourceKubernetesCredentialRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func dataSourceCredentialRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*api.Client)
 
 	credential, err := client.CreateToken(ctx)

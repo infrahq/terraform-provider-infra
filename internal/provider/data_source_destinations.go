@@ -11,11 +11,11 @@ import (
 	"github.com/infrahq/infra/api"
 )
 
-func dataSourceKubernetesClusters() *schema.Resource {
+func dataSourceDestinations() *schema.Resource {
 	return &schema.Resource{
-		Description: "Get a list of registered Kubernetes clusters.",
+		Description: "Get a list of registered Infra destinations.",
 
-		ReadContext: dataSourceKubernetesClustersRead,
+		ReadContext: dataSourceDestinationsRead,
 
 		Schema: map[string]*schema.Schema{
 			"id": &schema.Schema{
@@ -23,7 +23,7 @@ func dataSourceKubernetesClusters() *schema.Resource {
 				Computed: true,
 			},
 			"names": &schema.Schema{
-				Description: "A list of Kubernetes cluster names. Use `data.infra_kubernetes_cluster` to retrieve information about individual clusters.",
+				Description: "A list of registered destinations. Use `data.infra_destination` to retrieve information about individual destinations.",
 				Type:        schema.TypeList,
 				Computed:    true,
 				Elem: &schema.Schema{
@@ -34,7 +34,7 @@ func dataSourceKubernetesClusters() *schema.Resource {
 	}
 }
 
-func dataSourceKubernetesClustersRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func dataSourceDestinationsRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*api.Client)
 
 	request := api.ListDestinationsRequest{

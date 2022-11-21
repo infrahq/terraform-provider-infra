@@ -91,9 +91,9 @@ func New() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"infra_kubernetes_cluster":    dataSourceKubernetesCluster(),
-			"infra_kubernetes_clusters":   dataSourceKubernetesClusters(),
-			"infra_kubernetes_credential": dataSourceKubernetesCredential(),
+			"infra_destination":  dataSourceDestination(),
+			"infra_destinations": dataSourceDestinations(),
+			"infra_credential":   dataSourceCredential(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"infra_user":              resourceUser(),
