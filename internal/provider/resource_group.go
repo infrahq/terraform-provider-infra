@@ -20,6 +20,10 @@ func resourceGroup() *schema.Resource {
 		ReadContext:   resourceGroupRead,
 		DeleteContext: resourceGroupDelete,
 
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Description: "The group's unique identifier.",
@@ -100,24 +104,28 @@ func groupFromIDOrName(ctx context.Context, client *api.Client, d *schema.Resour
 	}
 
 	if s := d.Get(name).(string); s != "" {
-		request := api.ListGroupsRequest{
-			Name: d.Get(name).(string),
-			PaginationRequest: api.PaginationRequest{
-				Limit: 1,
-			},
-		}
-
-		response, err := client.ListGroups(ctx, request)
-		if err != nil {
-			return nil, err
-		}
-
-		if response.Count < 1 {
-			return nil, fmt.Errorf("group not found")
-		}
-
-		return &response.Items[0], nil
+		return groupFromName(ctx, client, s)
 	}
 
 	return nil, fmt.Errorf("one of `%s,%s` must be specified", id, name)
+}
+
+func groupFromName(ctx context.Context, client *api.Client, name string) (*api.Group, error) {
+	request := api.ListGroupsRequest{
+		Name: name,
+		PaginationRequest: api.PaginationRequest{
+			Limit: 1,
+		},
+	}
+
+	response, err := client.ListGroups(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	if response.Count < 1 {
+		return nil, fmt.Errorf("group not found: %s", name)
+	}
+
+	return &response.Items[0], nil
 }

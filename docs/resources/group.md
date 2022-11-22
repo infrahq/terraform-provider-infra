@@ -30,4 +30,10 @@ resource "infra_group" "example" {
 
 - `id` (String) The group's unique identifier.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import infra_group.example <group_id>
+```

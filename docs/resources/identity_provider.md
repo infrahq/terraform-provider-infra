@@ -165,4 +165,10 @@ Required:
 
 - `issuer` (String) The full Okta authorization server URL. Must start with `https://`.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import infra_identity_provider.example <identity_provider_id>
+```

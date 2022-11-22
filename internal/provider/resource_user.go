@@ -20,6 +20,10 @@ func resourceUser() *schema.Resource {
 		UpdateContext: resourceUserUpdate,
 		DeleteContext: resourceUserDelete,
 
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Description: "The user's unique identifier.",
@@ -162,7 +166,7 @@ func userFromEmail(ctx context.Context, client *api.Client, email string) (*api.
 	}
 
 	if response.Count < 1 {
-		return nil, fmt.Errorf("user not found")
+		return nil, fmt.Errorf("user not found: %s", email)
 	}
 
 	return &response.Items[0], nil

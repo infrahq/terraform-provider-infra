@@ -22,6 +22,10 @@ func resourceIdentityProvider() *schema.Resource {
 		UpdateContext: resourceIdentityProviderUpdate,
 		DeleteContext: resourceIdentityProviderDelete,
 
+		Importer: &schema.ResourceImporter{
+			StateContext: schema.ImportStatePassthroughContext,
+		},
+
 		Schema: map[string]*schema.Schema{
 			"id": {
 				Description: "The identity provider's unique identifier.",

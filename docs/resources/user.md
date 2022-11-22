@@ -34,4 +34,10 @@ resource "infra_user" "example" {
 
 - `id` (String) The user's unique identifier.
 
+## Import
 
+Import is supported using the following syntax:
+
+```shell
+terraform import infra_user.example <user_id>
+```
