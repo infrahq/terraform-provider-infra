@@ -104,7 +104,6 @@ func New() *schema.Provider {
 			"infra_group_role":        resourceGroupRole(),
 			"infra_group_grant":       resourceGroupGrant(),
 			"infra_identity_provider": resourceIdentityProvider(),
-			"infra_access_key":        resourceAccessKey(),
 		},
 	}
 }
