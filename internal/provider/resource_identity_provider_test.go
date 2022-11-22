@@ -19,16 +19,6 @@ func TestAccResourceIdentityProvider(t *testing.T) {
 
 	testCases := []testCase{
 		{
-			Name:           "oidc",
-			ConfigFunc:     testAccResourceIdentityProvider_withIssuer,
-			ExpectedIssuer: "https://my.custom.example.com",
-		},
-		{
-			Name:           "azure",
-			ConfigFunc:     testAccResourceIdentityProvider_withAzureAD,
-			ExpectedIssuer: "https://login.microsoftonline.com/abc/v2.0",
-		},
-		{
 			Name:           "google",
 			ConfigFunc:     testAccResourceIdentityProvider_withGoogle,
 			ExpectedIssuer: "https://accounts.google.com",
@@ -37,11 +27,6 @@ func TestAccResourceIdentityProvider(t *testing.T) {
 			Name:           "google-group",
 			ConfigFunc:     testAccResourceIdentityProvider_withGoogleGroup,
 			ExpectedIssuer: "https://accounts.google.com",
-		},
-		{
-			Name:           "okta",
-			ConfigFunc:     testAccResourceIdentityProvider_withOkta,
-			ExpectedIssuer: "https://my.okta.example.com",
 		},
 	}
 
