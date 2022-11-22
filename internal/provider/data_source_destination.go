@@ -13,7 +13,7 @@ import (
 
 func dataSourceDestination() *schema.Resource {
 	return &schema.Resource{
-		Description: "Get information about a registered Infra destiantion.",
+		Description: "Get information about a registered Infra destination.",
 
 		ReadContext: dataSourceDestinationRead,
 

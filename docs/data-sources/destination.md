@@ -3,12 +3,12 @@
 page_title: "infra_destination Data Source - terraform-provider-infra"
 subcategory: ""
 description: |-
-  Get information about a registered Infra destiantion.
+  Get information about a registered Infra destination.
 ---
 
 # infra_destination (Data Source)
 
-Get information about a registered Infra destiantion.
+Get information about a registered Infra destination.
 
 ## Example Usage
 
