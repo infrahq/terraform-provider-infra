@@ -2,7 +2,6 @@ package provider
 
 import (
 	"fmt"
-	"regexp"
 	"testing"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
@@ -28,7 +27,6 @@ func TestAccResourceUser(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
 					resource.TestCheckResourceAttr(resourceName, "email", email1),
-					resource.TestMatchResourceAttr(resourceName, "password", regexp.MustCompile("^[[:ascii:]]{12}$")),
 				),
 			},
 			{
@@ -44,7 +42,6 @@ func TestAccResourceUser(t *testing.T) {
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id2)),
 					resource.TestCheckResourceAttr(resourceName, "email", email2),
-					resource.TestMatchResourceAttr(resourceName, "password", regexp.MustCompile("^[[:ascii:]]{12}$")),
 					testAccCheckIDChanged(&id1, &id2),
 				),
 			},

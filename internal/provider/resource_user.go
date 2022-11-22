@@ -37,7 +37,6 @@ func resourceUser() *schema.Resource {
 				Description:      "The user's password. If not specified, username/password login will be disabled.",
 				Type:             schema.TypeString,
 				Optional:         true,
-				Computed:         true,
 				Sensitive:        true,
 				ValidateDiagFunc: StringMinLength(8),
 			},
@@ -55,17 +54,11 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m any) diag
 
 	if password := d.Get("password").(string); password != "" {
 		request := api.UpdateUserRequest{
-			ID:          user.ID,
-			OldPassword: user.OneTimePassword,
-			Password:    password,
+			ID:       user.ID,
+			Password: password,
 		}
 
 		if _, err := client.UpdateUser(ctx, &request); err != nil {
-			return diag.FromErr(err)
-		}
-
-	} else {
-		if err := d.Set("password", user.OneTimePassword); err != nil {
 			return diag.FromErr(err)
 		}
 	}
