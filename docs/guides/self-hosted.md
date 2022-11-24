@@ -6,7 +6,7 @@ description: |-
 
 # Self-hosted Infra
 
-While the Infra provider is designed for our Software-as-a-Service offering, it can also be configured to work with a self-hosted deployment of Infra server. This guide will describe describe that process.
+While the Infra provider is designed for our Software-as-a-Service offering, it can also be configured to work with a self-hosted deployment of Infra server. This guide will describe that process.
 
 ## Requirements
 
