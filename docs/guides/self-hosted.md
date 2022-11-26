@@ -78,4 +78,4 @@ provider "infra" {
 }
 ```
 
-These options can also be configured with environment variables. See the provider [schema](#schema) for details.
+These options can also be configured with environment variables. See the provider [schema](..#schema) for details.
