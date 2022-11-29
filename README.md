@@ -73,3 +73,5 @@ To build the provider, follow the steps above.
 To update the documentation, run `go generate`.
 
 To run the test suite, run `make testacc`.
+
+[1]: https://github.com/infrahq/infra/releases/latest
