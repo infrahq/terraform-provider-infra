@@ -12,10 +12,10 @@ Get a list of registered Infra destinations.
 ## Example Usage
 
 ```terraform
-data "infra_kubernetes_clusters" "all" {}
+data "infra_destinations" "all" {}
 
 output "my_clusters" {
-  value = data.infra_kubernetes_clusters.all
+  value = data.infra_destinations.all
 }
 ```
 
