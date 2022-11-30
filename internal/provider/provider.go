@@ -98,6 +98,7 @@ func New() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"infra_user":              resourceUser(),
 			"infra_group":             resourceGroup(),
+			"infra_group_membership":  resourceGroupMembership(),
 			"infra_grant":             resourceGrant(),
 			"infra_identity_provider": resourceIdentityProvider(),
 		},
