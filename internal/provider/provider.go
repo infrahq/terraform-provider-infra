@@ -41,7 +41,6 @@ func init() {
 func New() *schema.Provider {
 	return &schema.Provider{
 		ConfigureContextFunc: configure(),
-		
 
 		Schema: map[string]*schema.Schema{
 			"host": &schema.Schema{
@@ -99,9 +98,9 @@ func New() *schema.Provider {
 		ResourcesMap: map[string]*schema.Resource{
 			"infra_user":              resourceUser(),
 			"infra_group":             resourceGroup(),
+			"infra_grant":             resourceGrant(),
 			"infra_identity_provider": resourceIdentityProvider(),
 		},
-		
 	}
 }
 
