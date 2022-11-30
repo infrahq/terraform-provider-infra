@@ -26,14 +26,14 @@ func TestAccResourceUser(t *testing.T) {
 				Config: testAccResourceUser(email1),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
-					resource.TestCheckResourceAttr(resourceName, "email", email1),
+					resource.TestCheckResourceAttr(resourceName, "name", email1),
 				),
 			},
 			{
 				Config: testAccResourceUser_password(email1, "password"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
-					resource.TestCheckResourceAttr(resourceName, "email", email1),
+					resource.TestCheckResourceAttr(resourceName, "name", email1),
 					resource.TestCheckResourceAttr(resourceName, "password", "password"),
 				),
 			},
@@ -41,7 +41,7 @@ func TestAccResourceUser(t *testing.T) {
 				Config: testAccResourceUser(email2),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id2)),
-					resource.TestCheckResourceAttr(resourceName, "email", email2),
+					resource.TestCheckResourceAttr(resourceName, "name", email2),
 					testAccCheckIDChanged(&id1, &id2),
 				),
 			},
@@ -56,14 +56,14 @@ func randomEmail() string {
 func testAccResourceUser(email string) string {
 	return fmt.Sprintf(`
 resource "infra_user" "test" {
-	email = "%[1]s"
+	name = "%[1]s"
 }`, email)
 }
 
 func testAccResourceUser_password(email, password string) string {
 	return fmt.Sprintf(`
 resource "infra_user" "test" {
-	email = "%[1]s"
+	name = "%[1]s"
 	password = "%[2]s"
 }`, email, password)
 }
