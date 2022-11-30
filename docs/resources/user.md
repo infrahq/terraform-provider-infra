@@ -2,12 +2,12 @@
 page_title: "infra_user Resource - terraform-provider-infra"
 subcategory: ""
 description: |-
-  Provides an Infra user. This resource can be used to create and manage users.
+  Infra user resource creates a user with a specified name. The name must be an email address.
 ---
 
 # infra_user
 
-Provides an Infra user. This resource can be used to create and manage users.
+Infra user resource creates a user with a specified name. The name must be an email address.
 
 ## Example Usage
 
@@ -23,7 +23,7 @@ resource "infra_user" "example" {
 
 ### Required
 
-- `email` (String) The user's email address, e.g. `alice@example.com`.
+- `name` (String) The user's email address, e.g. `alice@example.com`.
 
 ### Optional
 

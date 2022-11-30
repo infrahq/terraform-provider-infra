@@ -14,7 +14,7 @@ import (
 
 func resourceGroup() *schema.Resource {
 	return &schema.Resource{
-		Description: "Provides an Infra group. This resource can be used to create and manage groups.",
+		Description: "Groups are used in Infra to manage a collection of users. A group can then be associated with a role and cluster via a grant and all users with the group will gain that role and and corresponding access to the cluster.",
 
 		CreateContext: resourceGroupCreate,
 		ReadContext:   resourceGroupRead,

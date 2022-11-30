@@ -15,7 +15,7 @@ import (
 
 func resourceIdentityProvider() *schema.Resource {
 	return &schema.Resource{
-		Description: "Provides an Infra identity provider. This resource can be used to create and manage identity providers.",
+		Description: "The infra identity provider resource can be used to create and manage identity providers.",
 
 		CreateContext: resourceIdentityProviderCreate,
 		ReadContext:   resourceIdentityProviderRead,

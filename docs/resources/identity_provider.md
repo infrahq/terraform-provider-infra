@@ -2,12 +2,12 @@
 page_title: "infra_identity_provider Resource - terraform-provider-infra"
 subcategory: ""
 description: |-
-  Provides an Infra identity provider. This resource can be used to create and manage identity providers.
+  The infra identity provider resource can be used to create and manage identity providers.
 ---
 
 # infra_identity_provider
 
-Provides an Infra identity provider. This resource can be used to create and manage identity providers.
+The infra identity provider resource can be used to create and manage identity providers.
 
 ## Example Usage
 
