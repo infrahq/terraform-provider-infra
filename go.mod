@@ -6,7 +6,7 @@ require (
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320
 	github.com/hashicorp/terraform-plugin-docs v0.13.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.24.1
-	github.com/infrahq/infra v0.18.1
+	github.com/infrahq/infra v0.19.0
 	gotest.tools/v3 v3.4.0
 )
 
@@ -23,7 +23,7 @@ require (
 	github.com/bgentry/speakeasy v0.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fatih/color v1.13.0 // indirect
-	github.com/getkin/kin-openapi v0.108.0 // indirect
+	github.com/getkin/kin-openapi v0.109.0 // indirect
 	github.com/go-openapi/jsonpointer v0.19.5 // indirect
 	github.com/go-openapi/swag v0.22.3 // indirect
 	github.com/go-test/deep v1.0.4 // indirect
