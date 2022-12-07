@@ -1,6 +1,6 @@
 ---
 page_title: Infra Provider
-description: Infra Terraform provider. Please visit https://docs.infrahq.com to get started.
+description: Infra Terraform provider. Please visit https://infrahq.com/docs for more details.
 ---
 
 # Infra
