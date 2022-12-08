@@ -18,10 +18,6 @@ func dataSourceDestinations() *schema.Resource {
 		ReadContext: dataSourceDestinationsRead,
 
 		Schema: map[string]*schema.Schema{
-			"id": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
 			"names": &schema.Schema{
 				Description: "A list of registered destinations. Use `data.infra_destination` to retrieve information about individual destinations.",
 				Type:        schema.TypeList,
