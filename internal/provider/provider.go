@@ -31,7 +31,7 @@ func init() {
 		}
 
 		if s.Default != nil {
-			fmt.Fprintf(&sb, " Default to %q.", s.Default)
+			fmt.Fprintf(&sb, " Default is %q.", s.Default)
 		}
 
 		return strings.TrimSpace(sb.String())
