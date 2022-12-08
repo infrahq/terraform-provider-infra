@@ -16,21 +16,21 @@ func TestAccResourceUser(t *testing.T) {
 	email1 := randomEmail()
 	email2 := randomEmail()
 
-	resourceName := "infra_user.test"
+	resourceName := fmt.Sprintf("infra_user.%s", t.Name())
 
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          testAccPreCheck(t),
 		ProviderFactories: testAccProviders(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceUser(email1),
+				Config: testAccResourceUser(t, email1),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
 					resource.TestCheckResourceAttr(resourceName, "name", email1),
 				),
 			},
 			{
-				Config: testAccResourceUser_password(email1, "password"),
+				Config: testAccResourceUser_password(t, email1, "password"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
 					resource.TestCheckResourceAttr(resourceName, "name", email1),
@@ -38,7 +38,7 @@ func TestAccResourceUser(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceUser(email2),
+				Config: testAccResourceUser(t, email2),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id2)),
 					resource.TestCheckResourceAttr(resourceName, "name", email2),
@@ -53,19 +53,19 @@ func randomEmail() string {
 	return fmt.Sprintf("%s@example.com", randomName())
 }
 
-func testAccResourceUser(email string) string {
+func testAccResourceUser(t *testing.T, email string) string {
 	return fmt.Sprintf(`
-resource "infra_user" "test" {
-	name = "%[1]s"
-}`, email)
+resource "infra_user" "%[1]s" {
+	name = "%[2]s"
+}`, t.Name(), email)
 }
 
-func testAccResourceUser_password(email, password string) string {
+func testAccResourceUser_password(t *testing.T, email, password string) string {
 	return fmt.Sprintf(`
-resource "infra_user" "test" {
-	name = "%[1]s"
-	password = "%[2]s"
-}`, email, password)
+resource "infra_user" "%[1]s" {
+	name = "%[2]s"
+	password = "%[3]s"
+}`, t.Name(), email, password)
 }
 
 func testCheckResourceAttrWithID(out *uid.ID) func(s string) error {

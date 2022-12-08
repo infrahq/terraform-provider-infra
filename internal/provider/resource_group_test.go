@@ -18,21 +18,21 @@ func TestAccResourceGroup(t *testing.T) {
 	name2 := randomName()
 	nameWithSpace := fmt.Sprintf("%s %s", randomName(), randomName())
 
-	resourceName := "infra_group.test"
+	resourceName := fmt.Sprintf("infra_group.%s", t.Name())
 
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          testAccPreCheck(t),
 		ProviderFactories: testAccProviders(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceGroup(name1),
+				Config: testAccResourceGroup(t, name1),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
 					resource.TestCheckResourceAttr(resourceName, "name", name1),
 				),
 			},
 			{
-				Config: testAccResourceGroup(name2),
+				Config: testAccResourceGroup(t, name2),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id2)),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
@@ -40,7 +40,7 @@ func TestAccResourceGroup(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceGroup(nameWithSpace),
+				Config: testAccResourceGroup(t, nameWithSpace),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id3)),
 					resource.TestCheckResourceAttr(resourceName, "name", nameWithSpace),
@@ -56,9 +56,9 @@ func randomName(prefixes ...string) string {
 	return acctest.RandomWithPrefix(strings.Join(prefixes, "-"))
 }
 
-func testAccResourceGroup(name string) string {
+func testAccResourceGroup(t *testing.T, name string) string {
 	return fmt.Sprintf(`
-resource "infra_group" "test" {
-	name = "%[1]s"
-}`, name)
+resource "infra_group" "%[1]s" {
+	name = "%[2]s"
+}`, t.Name(), name)
 }
