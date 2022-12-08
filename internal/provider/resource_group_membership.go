@@ -54,12 +54,11 @@ func resourceGroupMembership() *schema.Resource {
 				},
 			},
 			"group_name": {
-				Description:      "The name of the group to assign to the user.",
-				Type:             schema.TypeString,
-				Optional:         true,
-				Computed:         true,
-				ForceNew:         true,
-				ValidateDiagFunc: validateStringIsName(),
+				Description: "The name of the group to assign to the user.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
 				ExactlyOneOf: []string{
 					"group_id", "group_name",
 				},

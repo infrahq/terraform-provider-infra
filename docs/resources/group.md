@@ -23,7 +23,7 @@ resource "infra_group" "example" {
 
 ### Required
 
-- `name` (String) The group's name. Group names may include letters (uppercase and lowercase), numbers, underscores `_`, hyphens `-`, and periods `.`.
+- `name` (String) The group's name.
 
 ### Read-Only
 
