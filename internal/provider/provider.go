@@ -15,6 +15,19 @@ import (
 	"github.com/infrahq/infra/api"
 )
 
+// normalizeAttributePath extracts the last component from the attribute path, as delimited
+// by `.`. Fields such as ConflictsWith require absolute attribute paths which is difficult
+// to understand for documentation readers so extract only the last component. This may become
+// an problem if the attribute path references an attribute not in the same object.
+func normalizeAttributePath(before []string) (after []string) {
+	for _, b := range before {
+		parts := strings.Split(b, ".")
+		after = append(after, parts[len(parts)-1])
+	}
+
+	return after
+}
+
 func init() {
 	schema.DescriptionKind = schema.StringMarkdown
 	schema.SchemaDescriptionBuilder = func(s *schema.Schema) string {
@@ -22,12 +35,12 @@ func init() {
 
 		sb.WriteString(s.Description)
 
-		if s.ConflictsWith != nil && len(s.ConflictsWith) > 0 {
-			fmt.Fprintf(&sb, " Cannot be used with `%s`.", strings.Join(s.ConflictsWith, "`, `"))
+		if conflictsWith := normalizeAttributePath(s.ConflictsWith); conflictsWith != nil {
+			fmt.Fprintf(&sb, " Cannot be used with `%s`.", strings.Join(conflictsWith, "`, `"))
 		}
 
-		if s.ExactlyOneOf != nil && len(s.ExactlyOneOf) > 0 {
-			fmt.Fprintf(&sb, " One of `%s` must be set.", strings.Join(s.ExactlyOneOf, "`, `"))
+		if exactlyOneOf := normalizeAttributePath(s.ExactlyOneOf); exactlyOneOf != nil {
+			fmt.Fprintf(&sb, " One of `%s` must be set.", strings.Join(exactlyOneOf, "`, `"))
 		}
 
 		if s.Default != nil {
