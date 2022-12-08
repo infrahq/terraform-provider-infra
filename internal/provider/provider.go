@@ -91,18 +91,13 @@ func New() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"infra_destination":  dataSourceDestination(),
 			"infra_destinations": dataSourceDestinations(),
-			"infra_credential":   dataSourceCredential(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"infra_user":              resourceUser(),
-			"infra_user_role":         resourceUserRole(),
-			"infra_user_group":        resourceUserGroup(),
-			"infra_user_grant":        resourceUserGrant(),
 			"infra_group":             resourceGroup(),
-			"infra_group_role":        resourceGroupRole(),
-			"infra_group_grant":       resourceGroupGrant(),
+			"infra_group_membership":  resourceGroupMembership(),
+			"infra_grant":             resourceGrant(),
 			"infra_identity_provider": resourceIdentityProvider(),
 		},
 	}

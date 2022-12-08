@@ -1,19 +1,28 @@
 ---
-page_title: "infra Provider"
-subcategory: ""
-description: |-
-  
+page_title: Infra Provider
+description: Infra Terraform provider. Please visit https://infrahq.com/docs for more details.
 ---
 
-# infra Provider
+# Infra
 
+[Infra](https://infrahq.com) provides authentication and access management to servers, clusters, and databases.
 
+## Terraform Provider
 
-The Infra provider is used to interact with resources supported by [Infra](https://infrahq.com). The provider needs to be configured with the proper credentials before it can be used.
+Infra's Terraform provider is used to automate the configuration of Infra.
 
-Use the navigation to the left to read about the available resources.
+The individual resources that can be automated:
 
-## Example Usage
+- Connecting identity providers
+- Managing groups
+- Managing users
+- Assigning users to groups
+
+### Get Started
+
+The Infra provider must be configured with an access key in order to authenticate with the API server. The access key, and other arguments, can be configured in two ways: through Terraform as provider configuration or through environment variable.
+
+#### Terraform Provider Configuration
 
 ```terraform
 # Configure Infra Terraform provider.
@@ -22,11 +31,9 @@ provider "infra" {
 }
 ```
 
-## Authentication
+Note: Access key can be retrived using the methods listed in [Quickstart documentation](https://infrahq.com/docs/quickstart#create-an-access-key).
 
-The Infra provider must be configured with an access key in order to authenticate with the API server. The access key, and other arguments, can be configured in two ways: through Terraform as provider configurations or through environment variables.
-
-### Environment Variables
+#### Environment Variables
 
 The access key can be sourced from the `INFRA_ACCESS_KEY` environment variable.
 

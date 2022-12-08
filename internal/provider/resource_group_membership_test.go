@@ -7,36 +7,34 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 )
 
-func TestAccResourceUserGroup(t *testing.T) {
-	// var id1, id2 uid.ID
-
+func TestAccResourceGroupMembership(t *testing.T) {
 	email := randomEmail()
 	name := randomName()
 
-	resourceName := "infra_user_group.test"
+	resourceName := "infra_group_membership.test"
 
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          testAccPreCheck(t),
 		ProviderFactories: testAccProviders(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceUserGroup(email, name),
+				Config: testAccResourceGroupMembership(email, name),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "user_email", email),
+					resource.TestCheckResourceAttr(resourceName, "user_name", email),
 					resource.TestCheckResourceAttr(resourceName, "group_name", name),
 				),
 			},
 			{
-				Config: testAccResourceUserGroup_byUserEmail(email, name),
+				Config: testAccResourceGroupMembership_byUserEmail(email, name),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "user_email", email),
+					resource.TestCheckResourceAttr(resourceName, "user_name", email),
 					resource.TestCheckResourceAttr(resourceName, "group_name", name),
 				),
 			},
 			{
-				Config: testAccResourceUserGroup_byGroupName(email, name),
+				Config: testAccResourceGroupMembership_byGroupName(email, name),
 				Check: resource.ComposeTestCheckFunc(
-					resource.TestCheckResourceAttr(resourceName, "user_email", email),
+					resource.TestCheckResourceAttr(resourceName, "user_name", email),
 					resource.TestCheckResourceAttr(resourceName, "group_name", name),
 				),
 			},
@@ -44,34 +42,34 @@ func TestAccResourceUserGroup(t *testing.T) {
 	})
 }
 
-func testAccResourceUserGroup(email, name string) string {
+func testAccResourceGroupMembership(email, name string) string {
 	return fmt.Sprintf(`
 resource "infra_user" "test" {
-	email = "%[1]s"
+	name = "%[1]s"
 }
 
 resource "infra_group" "test" {
 	name = "%[2]s"
 }
 
-resource "infra_user_group" "test" {
+resource "infra_group_membership" "test" {
 	user_id = infra_user.test.id
 	group_id = infra_group.test.id
 }`, email, name)
 }
 
-func testAccResourceUserGroup_byUserEmail(email, name string) string {
+func testAccResourceGroupMembership_byUserEmail(email, name string) string {
 	return fmt.Sprintf(`
 resource "infra_user" "test" {
-	email = "%[1]s"
+	name = "%[1]s"
 }
 
 resource "infra_group" "test" {
 	name = "%[2]s"
 }
 
-resource "infra_user_group" "test" {
-	user_email = "%[1]s"
+resource "infra_group_membership" "test" {
+	user_name = "%[1]s"
 	group_id = infra_group.test.id
 
 	depends_on = [
@@ -80,17 +78,17 @@ resource "infra_user_group" "test" {
 }`, email, name)
 }
 
-func testAccResourceUserGroup_byGroupName(email, name string) string {
+func testAccResourceGroupMembership_byGroupName(email, name string) string {
 	return fmt.Sprintf(`
 resource "infra_user" "test" {
-	email = "%[1]s"
+	name = "%[1]s"
 }
 
 resource "infra_group" "test" {
 	name = "%[2]s"
 }
 
-resource "infra_user_group" "test" {
+resource "infra_group_membership" "test" {
 	user_id = infra_user.test.id
 	group_name = "%[2]s"
 

@@ -2,12 +2,12 @@
 page_title: "infra_group Resource - terraform-provider-infra"
 subcategory: ""
 description: |-
-  Provides an Infra group. This resource can be used to create and manage groups.
+  Groups are used in Infra to manage a collection of users. A group can then be associated with a role and cluster via a grant and all users with the group will gain that role and and corresponding access to the cluster.
 ---
 
 # infra_group
 
-Provides an Infra group. This resource can be used to create and manage groups.
+Groups are used in Infra to manage a collection of users. A group can then be associated with a role and cluster via a grant and all users with the group will gain that role and and corresponding access to the cluster.
 
 ## Example Usage
 

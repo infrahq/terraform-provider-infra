@@ -2,12 +2,12 @@ package provider
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/structure"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 
 	"github.com/infrahq/infra/api"
@@ -15,7 +15,7 @@ import (
 
 func resourceIdentityProvider() *schema.Resource {
 	return &schema.Resource{
-		Description: "Provides an Infra identity provider. This resource can be used to create and manage identity providers.",
+		Description: "The infra identity provider resource can be used to create and manage identity providers.",
 
 		CreateContext: resourceIdentityProviderCreate,
 		ReadContext:   resourceIdentityProviderRead,
@@ -155,17 +155,18 @@ func resourceIdentityProviderCreate(ctx context.Context, d *schema.ResourceData,
 		}
 
 		if serviceAccountKey := d.Get(fmt.Sprintf("google.%d.service_account_key", i)).(string); serviceAccountKey != "" {
-			var serviceAccountKeyFile struct {
-				PrivateKey  string `json:"service_account_key"`
-				ClientEmail string `json:"client_email"`
-			}
-
-			if err := json.Unmarshal([]byte(serviceAccountKey), &serviceAccountKeyFile); err != nil {
+			serviceAccountKeyJson, err := structure.ExpandJsonFromString(serviceAccountKey)
+			if err != nil {
 				return diag.FromErr(err)
 			}
 
-			request.API.PrivateKey = api.PEM(serviceAccountKeyFile.PrivateKey)
-			request.API.ClientEmail = serviceAccountKeyFile.ClientEmail
+			if serviceAccountKey, ok := serviceAccountKeyJson["service_account_key"]; ok {
+				request.API.PrivateKey = api.PEM(serviceAccountKey.(string))
+			}
+
+			if clientEmail, ok := serviceAccountKeyJson["client_email"]; ok {
+				request.API.ClientEmail = clientEmail.(string)
+			}
 		}
 
 		request.Kind = "google"
@@ -245,17 +246,18 @@ func resourceIdentityProviderUpdate(ctx context.Context, d *schema.ResourceData,
 		}
 
 		if serviceAccountKey := d.Get(fmt.Sprintf("google.%d.service_account_key", i)).(string); serviceAccountKey != "" {
-			var serviceAccountKeyFile struct {
-				PrivateKey  string `json:"service_account_key"`
-				ClientEmail string `json:"client_email"`
-			}
-
-			if err := json.Unmarshal([]byte(serviceAccountKey), &serviceAccountKeyFile); err != nil {
+			serviceAccountKeyJson, err := structure.ExpandJsonFromString(serviceAccountKey)
+			if err != nil {
 				return diag.FromErr(err)
 			}
 
-			request.API.PrivateKey = api.PEM(serviceAccountKeyFile.PrivateKey)
-			request.API.ClientEmail = serviceAccountKeyFile.ClientEmail
+			if serviceAccountKey, ok := serviceAccountKeyJson["service_account_key"]; ok {
+				request.API.PrivateKey = api.PEM(serviceAccountKey.(string))
+			}
+
+			if clientEmail, ok := serviceAccountKeyJson["client_email"]; ok {
+				request.API.ClientEmail = clientEmail.(string)
+			}
 		}
 
 		request.Kind = "google"

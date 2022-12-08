@@ -11,13 +11,13 @@ import (
 	"github.com/infrahq/infra/uid"
 )
 
-func resourceUserGroup() *schema.Resource {
+func resourceGroupMembership() *schema.Resource {
 	return &schema.Resource{
 		Description: "Provides an Infra user grant. This resource can be used to assign groups to users.",
 
-		CreateContext: resourceUserGroupCreate,
-		ReadContext:   resourceUserGroupRead,
-		DeleteContext: resourceUserGroupDelete,
+		CreateContext: resourceGroupMembershipCreate,
+		ReadContext:   resourceGroupMembershipRead,
+		DeleteContext: resourceGroupMembershipDelete,
 
 		Schema: map[string]*schema.Schema{
 			"user_id": {
@@ -28,10 +28,10 @@ func resourceUserGroup() *schema.Resource {
 				ForceNew:         true,
 				ValidateDiagFunc: validateStringIsID(),
 				ExactlyOneOf: []string{
-					"user_id", "user_email",
+					"user_id", "user_name",
 				},
 			},
-			"user_email": {
+			"user_name": {
 				Description:      "The email of the user to assign to the group.",
 				Type:             schema.TypeString,
 				Optional:         true,
@@ -39,7 +39,7 @@ func resourceUserGroup() *schema.Resource {
 				ForceNew:         true,
 				ValidateDiagFunc: validateStringIsEmail(),
 				ExactlyOneOf: []string{
-					"user_id", "user_email",
+					"user_id", "user_name",
 				},
 			},
 			"group_id": {
@@ -68,12 +68,12 @@ func resourceUserGroup() *schema.Resource {
 	}
 }
 
-func resourceUserGroupCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func resourceGroupMembershipCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*api.Client)
 
 	var diags diag.Diagnostics
 
-	user, err := userFromIDOrEmail(ctx, client, d, "user_id", "user_email")
+	user, err := userFromIDOrEmail(ctx, client, d, "user_id", "user_name")
 	if err != nil {
 		diags = append(diags, diag.Diagnostic{Summary: err.Error()})
 	}
@@ -105,10 +105,10 @@ func resourceUserGroupCreate(ctx context.Context, d *schema.ResourceData, m any)
 	}
 
 	d.SetId(fmt.Sprintf("%s/%s", user.Name, group.Name))
-	return resourceUserGroupRead(ctx, d, m)
+	return resourceGroupMembershipRead(ctx, d, m)
 }
 
-func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func resourceGroupMembershipRead(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*api.Client)
 
 	userID, err := ParseID(d, "user_id")
@@ -131,7 +131,7 @@ func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, m any) d
 		return diag.FromErr(err)
 	}
 
-	if err := d.Set("user_email", user.Name); err != nil {
+	if err := d.Set("user_name", user.Name); err != nil {
 		return diag.FromErr(err)
 	}
 
@@ -143,7 +143,7 @@ func resourceUserGroupRead(ctx context.Context, d *schema.ResourceData, m any) d
 	return diags
 }
 
-func resourceUserGroupDelete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
+func resourceGroupMembershipDelete(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*api.Client)
 
 	userID, err := ParseID(d, "user_id")

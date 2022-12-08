@@ -1,11 +1,11 @@
 ---
-page_title: "infra_user_group Resource - terraform-provider-infra"
+page_title: "infra_group_membership Resource - terraform-provider-infra"
 subcategory: ""
 description: |-
   Provides an Infra user grant. This resource can be used to assign groups to users.
 ---
 
-# infra_user_group
+# infra_group_membership
 
 Provides an Infra user grant. This resource can be used to assign groups to users.
 
@@ -40,8 +40,8 @@ resource "infra_user_group" "example" {
 
 - `group_id` (String) The ID of the group to assign to the user. One of `group_id`, `group_name` must be set.
 - `group_name` (String) The name of the group to assign to the user. One of `group_id`, `group_name` must be set.
-- `user_email` (String) The email of the user to assign to the group. One of `user_id`, `user_email` must be set.
-- `user_id` (String) The ID of the user to assign to the group. One of `user_id`, `user_email` must be set.
+- `user_id` (String) The ID of the user to assign to the group. One of `user_id`, `user_name` must be set.
+- `user_name` (String) The email of the user to assign to the group. One of `user_id`, `user_name` must be set.
 
 ### Read-Only
 

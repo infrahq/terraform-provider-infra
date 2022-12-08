@@ -13,7 +13,7 @@ import (
 
 func resourceUser() *schema.Resource {
 	return &schema.Resource{
-		Description: "Provides an Infra user. This resource can be used to create and manage users.",
+		Description: "Infra user resource creates a user with a specified name. The name must be an email address.",
 
 		CreateContext: resourceUserCreate,
 		ReadContext:   resourceUserRead,
@@ -30,7 +30,7 @@ func resourceUser() *schema.Resource {
 				Type:        schema.TypeString,
 				Computed:    true,
 			},
-			"email": {
+			"name": {
 				Description:      "The user's email address, e.g. `alice@example.com`.",
 				Type:             schema.TypeString,
 				Required:         true,
@@ -51,7 +51,7 @@ func resourceUser() *schema.Resource {
 func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*api.Client)
 
-	user, err := client.CreateUser(ctx, &api.CreateUserRequest{Name: d.Get("email").(string)})
+	user, err := client.CreateUser(ctx, &api.CreateUserRequest{Name: d.Get("name").(string)})
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -84,7 +84,7 @@ func resourceUserRead(ctx context.Context, d *schema.ResourceData, m any) diag.D
 		return diag.FromErr(err)
 	}
 
-	if err := d.Set("email", user.Name); err != nil {
+	if err := d.Set("name", user.Name); err != nil {
 		return diag.FromErr(err)
 	}
 
