@@ -31,11 +31,10 @@ func resourceGroup() *schema.Resource {
 				Computed:    true,
 			},
 			"name": {
-				Description:      "The group's name. Group names may include letters (uppercase and lowercase), numbers, underscores `_`, hyphens `-`, and periods `.`.",
-				Type:             schema.TypeString,
-				Required:         true,
-				ForceNew:         true,
-				ValidateDiagFunc: validateStringIsName(),
+				Description: "The group's name.",
+				Type:        schema.TypeString,
+				Required:    true,
+				ForceNew:    true,
 			},
 		},
 	}

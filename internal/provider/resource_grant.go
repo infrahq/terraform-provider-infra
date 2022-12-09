@@ -59,12 +59,11 @@ func resourceGrant() *schema.Resource {
 				},
 			},
 			"group_name": {
-				Description:      "The name of the group to assign this grant.",
-				Type:             schema.TypeString,
-				Optional:         true,
-				Computed:         true,
-				ForceNew:         true,
-				ValidateDiagFunc: validateStringIsName(),
+				Description: "The name of the group to assign this grant.",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Computed:    true,
+				ForceNew:    true,
 				ExactlyOneOf: []string{
 					"user_id", "user_name", "group_id", "group_name",
 				},

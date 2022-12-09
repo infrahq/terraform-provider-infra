@@ -12,10 +12,11 @@ import (
 )
 
 func TestAccResourceGroup(t *testing.T) {
-	var id1, id2 uid.ID
+	var id1, id2, id3 uid.ID
 
 	name1 := randomName()
 	name2 := randomName()
+	nameWithSpace := fmt.Sprintf("%s %s", randomName(), randomName())
 
 	resourceName := "infra_group.test"
 
@@ -36,6 +37,14 @@ func TestAccResourceGroup(t *testing.T) {
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id2)),
 					resource.TestCheckResourceAttr(resourceName, "name", name2),
 					testAccCheckIDChanged(&id1, &id2),
+				),
+			},
+			{
+				Config: testAccResourceGroup(nameWithSpace),
+				Check: resource.ComposeTestCheckFunc(
+					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id3)),
+					resource.TestCheckResourceAttr(resourceName, "name", nameWithSpace),
+					testAccCheckIDChanged(&id2, &id3),
 				),
 			},
 		},
