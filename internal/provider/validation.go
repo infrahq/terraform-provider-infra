@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/mail"
 	"regexp"
-	"strings"
 	"time"
 
 	"github.com/hashicorp/go-cty/cty"
@@ -35,10 +34,6 @@ func validateStringIsEmail() schema.SchemaValidateDiagFunc {
 
 		if address.Name != "" {
 			return diag.Errorf("mail: must not contain display name")
-		}
-
-		if !strings.Contains(strings.Split(address.Address, "@")[1], ".") {
-			return diag.Errorf("mail: missing '.' in address domain")
 		}
 
 		var diags diag.Diagnostics

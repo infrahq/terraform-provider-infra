@@ -33,9 +33,7 @@ func TestStringIsDuration(t *testing.T) {
 func TestStringIsEmail(t *testing.T) {
 	cases := map[string]diag.Diagnostics{
 		"admin@example.com": nil,
-		"admin@example": diag.Diagnostics{
-			{Summary: "mail: missing '.' in address domain"},
-		},
+		"admin@example":     nil,
 		"admin": diag.Diagnostics{
 			{Summary: "mail: missing '@' or angle-addr"},
 		},
