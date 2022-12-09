@@ -17,14 +17,17 @@ func TestAccResourceGrant_userKubernetes(t *testing.T) {
 	cluster := randomName("cluster")
 	namespace := randomName("ns")
 
-	resourceName := "infra_grant.test"
+	resourceName := fmt.Sprintf("infra_grant.%s", t.Name())
 
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          testAccPreCheck(t),
 		ProviderFactories: testAccProviders(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceGrant_userKubernetes(email, "admin", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceUser(t, email),
+					testAccResourceGrant_userKubernetes(t, "admin", cluster),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
 					resource.TestCheckResourceAttr(resourceName, "user_name", email),
@@ -32,7 +35,10 @@ func TestAccResourceGrant_userKubernetes(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceGrant_userKubernetes(email, "view", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceUser(t, email),
+					testAccResourceGrant_userKubernetes(t, "view", cluster),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id2)),
 					resource.TestCheckResourceAttr(resourceName, "user_name", email),
@@ -41,7 +47,10 @@ func TestAccResourceGrant_userKubernetes(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceGrant_userKubernetesByName(email, "edit", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceUser(t, email),
+					testAccResourceGrant_userKubernetesByName(t, email, "edit", cluster),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id3)),
 					resource.TestCheckResourceAttr(resourceName, "user_name", email),
@@ -50,7 +59,10 @@ func TestAccResourceGrant_userKubernetes(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceGrant_userKubernetesWithNamespace(email, "cluster-admin", cluster, namespace),
+				Config: composeTestConfigFunc(
+					testAccResourceUser(t, email),
+					testAccResourceGrant_userKubernetesWithNamespace(t, "cluster-admin", cluster, namespace),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id4)),
 					resource.TestCheckResourceAttr(resourceName, "user_name", email),
@@ -62,57 +74,45 @@ func TestAccResourceGrant_userKubernetes(t *testing.T) {
 	})
 }
 
-func testAccResourceGrant_userKubernetes(email, role, cluster string) string {
+func testAccResourceGrant_userKubernetes(t *testing.T, role, cluster string) string {
 	return fmt.Sprintf(`
-resource "infra_user" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	user_id = infra_user.test.id
+resource "infra_grant" "%[1]s" {
+	user_id = infra_user.%[1]s.id
 
 	kubernetes {
 		role = "%[2]s"
 		cluster = "%[3]s"
 	}
-}`, email, role, cluster)
+}`, t.Name(), role, cluster)
 }
 
-func testAccResourceGrant_userKubernetesByName(email, role, cluster string) string {
+func testAccResourceGrant_userKubernetesByName(t *testing.T, email, role, cluster string) string {
 	return fmt.Sprintf(`
-resource "infra_user" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	user_name = "%[1]s"
+resource "infra_grant" "%[1]s" {
+	user_name = "%[2]s"
 
 	kubernetes {
-		role = "%[2]s"
-		cluster = "%[3]s"
+		role = "%[3]s"
+		cluster = "%[4]s"
 	}
 
 	depends_on = [
-		infra_user.test,
+		infra_user.%[1]s,
 	]
-}`, email, role, cluster)
+}`, t.Name(), email, role, cluster)
 }
 
-func testAccResourceGrant_userKubernetesWithNamespace(email, role, cluster, namespace string) string {
+func testAccResourceGrant_userKubernetesWithNamespace(t *testing.T, role, cluster, namespace string) string {
 	return fmt.Sprintf(`
-resource "infra_user" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	user_id = infra_user.test.id
+resource "infra_grant" "%[1]s" {
+	user_id = infra_user.%[1]s.id
 
 	kubernetes {
 		role = "%[2]s"
 		cluster = "%[3]s"
 		namespace = "%[4]s"
 	}
-}`, email, role, cluster, namespace)
+}`, t.Name(), role, cluster, namespace)
 }
 
 func TestAccResourceGrant_userInfra(t *testing.T) {
@@ -120,16 +120,17 @@ func TestAccResourceGrant_userInfra(t *testing.T) {
 
 	email := randomEmail()
 
-	cluster := randomName("cluster")
-
-	resourceName := "infra_grant.test"
+	resourceName := fmt.Sprintf("infra_grant.%s", t.Name())
 
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          testAccPreCheck(t),
 		ProviderFactories: testAccProviders(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceGrant_userInfra(email, "admin", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceUser(t, email),
+					testAccResourceGrant_userInfra(t, "admin"),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
 					resource.TestCheckResourceAttr(resourceName, "user_name", email),
@@ -137,7 +138,10 @@ func TestAccResourceGrant_userInfra(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceGrant_userInfra(email, "view", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceUser(t, email),
+					testAccResourceGrant_userInfra(t, "view"),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id2)),
 					resource.TestCheckResourceAttr(resourceName, "user_name", email),
@@ -146,7 +150,10 @@ func TestAccResourceGrant_userInfra(t *testing.T) {
 				),
 			},
 			{
-				Config: testAccResourceGrant_userInfraByName(email, "admin", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceUser(t, email),
+					testAccResourceGrant_userInfraByName(t, email, "admin"),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id3)),
 					resource.TestCheckResourceAttr(resourceName, "user_name", email),
@@ -158,85 +165,89 @@ func TestAccResourceGrant_userInfra(t *testing.T) {
 	})
 }
 
-func testAccResourceGrant_userInfra(email, role, cluster string) string {
+func testAccResourceGrant_userInfra(t *testing.T, role string) string {
 	return fmt.Sprintf(`
-resource "infra_user" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	user_id = infra_user.test.id
+resource "infra_grant" "%[1]s" {
+	user_id = infra_user.%[1]s.id
 
 	infra {
 		role = "%[2]s"
 	}
-}`, email, role, cluster)
+}`, t.Name(), role)
 }
 
-func testAccResourceGrant_userInfraByName(email, role, cluster string) string {
+func testAccResourceGrant_userInfraByName(t *testing.T, email, role string) string {
 	return fmt.Sprintf(`
-resource "infra_user" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	user_name = "%[1]s"
+resource "infra_grant" "%[1]s" {
+	user_name = "%[2]s"
 
 	infra {
-		role = "%[2]s"
+		role = "%[3]s"
 	}
 
 	depends_on = [
-		infra_user.test,
+		infra_user.%[1]s,
 	]
-}`, email, role, cluster)
+}`, t.Name(), email, role)
 }
 
 func TestAccResourceGrant_groupKubernetes(t *testing.T) {
 	var id1, id2, id3, id4 uid.ID
 
-	name := randomName()
+	email := randomEmail()
 
 	cluster := randomName("cluster")
 	namespace := randomName("ns")
 
-	resourceName := "infra_grant.test"
+	resourceName := fmt.Sprintf("infra_grant.%s", t.Name())
 
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          testAccPreCheck(t),
 		ProviderFactories: testAccProviders(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceGrant_groupKubernetes(name, "admin", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceGroup(t, email),
+					testAccResourceGrant_groupKubernetes(t, "admin", cluster),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
-					resource.TestCheckResourceAttr(resourceName, "group_name", name),
+					resource.TestCheckResourceAttr(resourceName, "group_name", email),
 					resource.TestCheckResourceAttr(resourceName, "kubernetes.0.role", "admin"),
 				),
 			},
 			{
-				Config: testAccResourceGrant_groupKubernetes(name, "view", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceGroup(t, email),
+					testAccResourceGrant_groupKubernetes(t, "view", cluster),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id2)),
-					resource.TestCheckResourceAttr(resourceName, "group_name", name),
+					resource.TestCheckResourceAttr(resourceName, "group_name", email),
 					resource.TestCheckResourceAttr(resourceName, "kubernetes.0.role", "view"),
 					testAccCheckIDChanged(&id1, &id2),
 				),
 			},
 			{
-				Config: testAccResourceGrant_groupKubernetesByName(name, "edit", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceGroup(t, email),
+					testAccResourceGrant_groupKubernetesByName(t, email, "edit", cluster),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id3)),
-					resource.TestCheckResourceAttr(resourceName, "group_name", name),
+					resource.TestCheckResourceAttr(resourceName, "group_name", email),
 					resource.TestCheckResourceAttr(resourceName, "kubernetes.0.role", "edit"),
 					testAccCheckIDChanged(&id2, &id3),
 				),
 			},
 			{
-				Config: testAccResourceGrant_groupKubernetesWithNamespace(name, "cluster-admin", cluster, namespace),
+				Config: composeTestConfigFunc(
+					testAccResourceGroup(t, email),
+					testAccResourceGrant_groupKubernetesWithNamespace(t, "cluster-admin", cluster, namespace),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id4)),
-					resource.TestCheckResourceAttr(resourceName, "group_name", name),
+					resource.TestCheckResourceAttr(resourceName, "group_name", email),
 					resource.TestCheckResourceAttr(resourceName, "kubernetes.0.role", "cluster-admin"),
 					testAccCheckIDChanged(&id3, &id4),
 				),
@@ -245,94 +256,89 @@ func TestAccResourceGrant_groupKubernetes(t *testing.T) {
 	})
 }
 
-func testAccResourceGrant_groupKubernetes(name, role, cluster string) string {
+func testAccResourceGrant_groupKubernetes(t *testing.T, role, cluster string) string {
 	return fmt.Sprintf(`
-resource "infra_group" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	group_id = infra_group.test.id
+resource "infra_grant" "%[1]s" {
+	group_id = infra_group.%[1]s.id
 
 	kubernetes {
 		role = "%[2]s"
 		cluster = "%[3]s"
 	}
-}`, name, role, cluster)
+}`, t.Name(), role, cluster)
 }
 
-func testAccResourceGrant_groupKubernetesByName(name, role, cluster string) string {
+func testAccResourceGrant_groupKubernetesByName(t *testing.T, email, role, cluster string) string {
 	return fmt.Sprintf(`
-resource "infra_group" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	group_name = "%[1]s"
+resource "infra_grant" "%[1]s" {
+	group_name = "%[2]s"
 
 	kubernetes {
-		role = "%[2]s"
-		cluster = "%[3]s"
+		role = "%[3]s"
+		cluster = "%[4]s"
 	}
 
 	depends_on = [
-		infra_group.test,
+		infra_group.%[1]s,
 	]
-}`, name, role, cluster)
+}`, t.Name(), email, role, cluster)
 }
 
-func testAccResourceGrant_groupKubernetesWithNamespace(name, role, cluster, namespace string) string {
+func testAccResourceGrant_groupKubernetesWithNamespace(t *testing.T, role, cluster, namespace string) string {
 	return fmt.Sprintf(`
-resource "infra_group" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	group_id = infra_group.test.id
+resource "infra_grant" "%[1]s" {
+	group_id = infra_group.%[1]s.id
 
 	kubernetes {
 		role = "%[2]s"
 		cluster = "%[3]s"
 		namespace = "%[4]s"
 	}
-}`, name, role, cluster, namespace)
+}`, t.Name(), role, cluster, namespace)
 }
 
 func TestAccResourceGrant_groupInfra(t *testing.T) {
 	var id1, id2, id3 uid.ID
 
-	name := randomName()
+	email := randomEmail()
 
-	cluster := randomName("cluster")
-
-	resourceName := "infra_grant.test"
+	resourceName := fmt.Sprintf("infra_grant.%s", t.Name())
 
 	resource.UnitTest(t, resource.TestCase{
 		PreCheck:          testAccPreCheck(t),
 		ProviderFactories: testAccProviders(t),
 		Steps: []resource.TestStep{
 			{
-				Config: testAccResourceGrant_groupInfra(name, "admin", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceGroup(t, email),
+					testAccResourceGrant_groupInfra(t, "admin"),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id1)),
-					resource.TestCheckResourceAttr(resourceName, "group_name", name),
+					resource.TestCheckResourceAttr(resourceName, "group_name", email),
 					resource.TestCheckResourceAttr(resourceName, "infra.0.role", "admin"),
 				),
 			},
 			{
-				Config: testAccResourceGrant_groupInfra(name, "view", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceGroup(t, email),
+					testAccResourceGrant_groupInfra(t, "view"),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id2)),
-					resource.TestCheckResourceAttr(resourceName, "group_name", name),
+					resource.TestCheckResourceAttr(resourceName, "group_name", email),
 					resource.TestCheckResourceAttr(resourceName, "infra.0.role", "view"),
 					testAccCheckIDChanged(&id1, &id2),
 				),
 			},
 			{
-				Config: testAccResourceGrant_groupInfraByName(name, "admin", cluster),
+				Config: composeTestConfigFunc(
+					testAccResourceGroup(t, email),
+					testAccResourceGrant_groupInfraByName(t, email, "admin"),
+				),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttrWith(resourceName, "id", testCheckResourceAttrWithID(&id3)),
-					resource.TestCheckResourceAttr(resourceName, "group_name", name),
+					resource.TestCheckResourceAttr(resourceName, "group_name", email),
 					resource.TestCheckResourceAttr(resourceName, "infra.0.role", "admin"),
 					testAccCheckIDChanged(&id2, &id3),
 				),
@@ -341,36 +347,28 @@ func TestAccResourceGrant_groupInfra(t *testing.T) {
 	})
 }
 
-func testAccResourceGrant_groupInfra(name, role, cluster string) string {
+func testAccResourceGrant_groupInfra(t *testing.T, role string) string {
 	return fmt.Sprintf(`
-resource "infra_group" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	group_id = infra_group.test.id
+resource "infra_grant" "%[1]s" {
+	group_id = infra_group.%[1]s.id
 
 	infra {
 		role = "%[2]s"
 	}
-}`, name, role, cluster)
+}`, t.Name(), role)
 }
 
-func testAccResourceGrant_groupInfraByName(name, role, cluster string) string {
+func testAccResourceGrant_groupInfraByName(t *testing.T, email, role string) string {
 	return fmt.Sprintf(`
-resource "infra_group" "test" {
-	name = "%[1]s"
-}
-
-resource "infra_grant" "test" {
-	group_name = "%[1]s"
+resource "infra_grant" "%[1]s" {
+	group_name = "%[2]s"
 
 	infra {
-		role = "%[2]s"
+		role = "%[3]s"
 	}
 
 	depends_on = [
-		infra_group.test,
+		infra_group.%[1]s,
 	]
-}`, name, role, cluster)
+}`, t.Name(), email, role)
 }
