@@ -105,6 +105,8 @@ func New() *schema.Provider {
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"infra_destinations": dataSourceDestinations(),
+			"infra_groups":       dataSourceGroups(),
+			"infra_users":        dataSourceUsers(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
 			"infra_user":              resourceUser(),
