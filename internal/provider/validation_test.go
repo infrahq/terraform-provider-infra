@@ -118,7 +118,7 @@ func TestStringMinLength(t *testing.T) {
 		},
 	}
 
-	fn := StringMinLength(8)
+	fn := stringMinLength(8)
 	for input, expected := range cases {
 		t.Run(input, func(t *testing.T) {
 			actual := fn(input, cty.Path{})
