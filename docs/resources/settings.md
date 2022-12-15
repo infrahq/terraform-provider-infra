@@ -6,6 +6,7 @@ description: |-
   infra_settings behaves differently than normal Terraform resources as settings are
   created with the organization. When a Terraform resource is created, settings automatically
   imported while no action is taken when the resource is deleted.
+  -> This resource requires Infra server version 0.20.0 or higher.
 ---
 
 # infra_settings
@@ -15,6 +16,8 @@ Provides Infra organization settings.
 `infra_settings` behaves differently than normal Terraform resources as settings are
 created with the organization. When a Terraform resource is created, settings automatically
 imported while no action is taken when the resource is deleted.
+
+-> This resource requires Infra server version 0.20.0 or higher.
 
 ## Example Usage
 

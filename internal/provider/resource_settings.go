@@ -17,7 +17,9 @@ func resourceSettings() *schema.Resource {
 
 ` + "`infra_settings`" + ` behaves differently than normal Terraform resources as settings are
 created with the organization. When a Terraform resource is created, settings automatically
-imported while no action is taken when the resource is deleted.`,
+imported while no action is taken when the resource is deleted.
+
+-> This resource requires Infra server version 0.20.0 or higher.`,
 
 		CreateContext: resourceSettingsUpdate,
 		ReadContext:   resourceSettingsRead,
@@ -104,6 +106,10 @@ func resourceSettingsRead(ctx context.Context, d *schema.ResourceData, m any) di
 
 func resourceSettingsUpdate(ctx context.Context, d *schema.ResourceData, m any) diag.Diagnostics {
 	client := m.(*api.Client)
+
+	if err := requireMinimumServerVersion(ctx, client, "0.20.0"); err != nil {
+		return diag.FromErr(err)
+	}
 
 	var requirements api.PasswordRequirements
 
