@@ -42,7 +42,7 @@ func resourceUser() *schema.Resource {
 				Type:             schema.TypeString,
 				Optional:         true,
 				Sensitive:        true,
-				ValidateDiagFunc: StringMinLength(8),
+				ValidateDiagFunc: stringMinLength(8),
 			},
 		},
 	}

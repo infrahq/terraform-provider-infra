@@ -44,7 +44,7 @@ func init() {
 		}
 
 		if s.Default != nil {
-			fmt.Fprintf(&sb, " Default is %q.", s.Default)
+			fmt.Fprintf(&sb, " Default is `%v`.", s.Default)
 		}
 
 		return strings.TrimSpace(sb.String())
@@ -114,6 +114,8 @@ func New() *schema.Provider {
 			"infra_group_membership":  resourceGroupMembership(),
 			"infra_grant":             resourceGrant(),
 			"infra_identity_provider": resourceIdentityProvider(),
+			"infra_access_key":        resourceAccessKey(),
+			"infra_settings":          resourceSettings(),
 		},
 	}
 }
