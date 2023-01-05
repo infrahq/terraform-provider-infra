@@ -1,7 +1,6 @@
 package provider
 
 import (
-	"context"
 	"encoding/pem"
 	"fmt"
 	"io"
@@ -9,10 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Masterminds/semver/v3"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 
-	"github.com/infrahq/infra/api"
 	"github.com/infrahq/infra/uid"
 )
 
@@ -67,27 +64,4 @@ func DecodePEMFile(filepath string, keytype string) ([]byte, error) {
 	}
 
 	return DecodePEM(data, keytype)
-}
-
-func requireMinimumServerVersion(ctx context.Context, client *api.Client, minimum string) error {
-	minimumSemVer, err := semver.NewVersion(minimum)
-	if err != nil {
-		return err
-	}
-
-	serverVersion, err := client.GetServerVersion(ctx)
-	if err != nil {
-		return err
-	}
-
-	serverSemVer, err := semver.NewVersion(serverVersion.Version)
-	if err != nil {
-		return err
-	}
-
-	if serverSemVer.LessThan(minimumSemVer) {
-		return fmt.Errorf("server must be at least version %s or higher. currently %s", minimum, serverVersion.Version)
-	}
-
-	return nil
 }

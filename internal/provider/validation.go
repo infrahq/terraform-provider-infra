@@ -61,7 +61,7 @@ func validateStringIsDuration() schema.SchemaValidateDiagFunc {
 	}
 }
 
-func stringMinLength(min int) schema.SchemaValidateDiagFunc {
+func StringMinLength(min int) schema.SchemaValidateDiagFunc {
 	return validation.ToDiagFunc(
 		func(v any, k string) (warnings []string, errors []error) {
 			if len(v.(string)) < min {
