@@ -81,7 +81,7 @@ Required:
 Required:
 
 - `cluster` (String) The name of the Kubernetes cluster to assign to the user.
-- `role` (String) The name of the Kubernetes ClusterRole to assign to the user.
+- `role` (String) The name of the Kubernetes ClusterRole to assign to the user. See [Kubernetes Roles](https://infrahq.com/docs/integrations/kubernetes#roles) for a list of valid roles.
 
 Optional:
 
