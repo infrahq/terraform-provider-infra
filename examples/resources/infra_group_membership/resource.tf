@@ -1,5 +1,5 @@
 resource "infra_user" "example" {
-  email = "example@example.com"
+  name = "example@example.com"
 }
 
 resuorce "infra_group" "example" {
@@ -7,13 +7,13 @@ resuorce "infra_group" "example" {
 }
 
 # Assign a user to a group.
-resource "infra_user_group" "example" {
+resource "infra_group_membership" "example" {
   user_id  = infra_user.example.id
   group_id = infra_group.example.id
 }
 
 # Assign a user to a group.
-resource "infra_user_group" "example" {
-  user_email = "example@example.com"
+resource "infra_group_membership" "example" {
+  user_name  = "example@example.com"
   group_name = "Example"
 }
