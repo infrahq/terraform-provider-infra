@@ -27,7 +27,7 @@ resource "infra_user" "example" {
 
 ### Optional
 
-- `password` (String, Sensitive) The user's password. If not specified, username/password login will be disabled.
+- `password` (String, Sensitive) The user's password. This password is one-time use and must be changed before the account can be used. If omitted, a password will be randomly generated. Note: this field will be empty for an imported user.
 
 ### Read-Only
 

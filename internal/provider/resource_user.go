@@ -38,8 +38,9 @@ func resourceUser() *schema.Resource {
 				ValidateDiagFunc: validateStringIsEmail(),
 			},
 			"password": {
-				Description:      "The user's password. If not specified, username/password login will be disabled.",
+				Description:      "The user's password. This password is one-time use and must be changed before the account can be used. If omitted, a password will be randomly generated. Note: this field will be empty for an imported user.",
 				Type:             schema.TypeString,
+				Computed:         true,
 				Optional:         true,
 				Sensitive:        true,
 				ValidateDiagFunc: stringMinLength(8),
@@ -63,6 +64,10 @@ func resourceUserCreate(ctx context.Context, d *schema.ResourceData, m any) diag
 		}
 
 		if _, err := client.UpdateUser(ctx, &request); err != nil {
+			return diag.FromErr(err)
+		}
+	} else {
+		if err := d.Set("password", user.OneTimePassword); err != nil {
 			return diag.FromErr(err)
 		}
 	}
