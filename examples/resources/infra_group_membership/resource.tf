@@ -2,7 +2,7 @@ resource "infra_user" "example" {
   name = "example@example.com"
 }
 
-resuorce "infra_group" "example" {
+resource "infra_group" "example" {
   name = "Example"
 }
 
