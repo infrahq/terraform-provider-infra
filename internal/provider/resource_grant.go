@@ -103,7 +103,7 @@ func resourceGrant() *schema.Resource {
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"role": {
-							Description: "The name of the Kubernetes ClusterRole to assign to the user.",
+							Description: "The name of the Kubernetes ClusterRole to assign to the user. See [Kubernetes Roles](https://infrahq.com/docs/integrations/kubernetes#roles) for a list of valid roles.",
 							Type:        schema.TypeString,
 							Required:    true,
 							ForceNew:    true,
