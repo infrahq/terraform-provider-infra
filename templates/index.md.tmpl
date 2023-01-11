@@ -24,12 +24,11 @@ The Infra provider must be configured with an access key in order to authenticat
 
 #### Terraform Provider Configuration
 
-```terraform
-# Configure Infra Terraform provider.
-provider "infra" {
-  access_key = "xxxxxxxxxx.yyyyyyyyyyyyyyyyyyyyyyyy"
-}
-```
+{{ if .HasExample -}}
+
+{{ .ExampleFile | tffile }}
+
+{{- end }}
 
 Note: Access key can be retrived using the methods listed in [Quickstart documentation](https://infrahq.com/docs/quickstart#create-an-access-key).
 
