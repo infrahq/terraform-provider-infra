@@ -25,6 +25,14 @@ The Infra provider must be configured with an access key in order to authenticat
 #### Terraform Provider Configuration
 
 ```terraform
+terraform {
+  required_providers {
+    infra = {
+      source = "infrahq/infra"
+    }
+  }
+}
+
 # Configure Infra Terraform provider.
 provider "infra" {
   access_key = "xxxxxxxxxx.yyyyyyyyyyyyyyyyyyyyyyyy"
